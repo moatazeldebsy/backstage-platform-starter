@@ -1,0 +1,197 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: rds-database
+  title: Managed Postgres (RDS)
+  description: Spin up an Amazon RDS Postgres instance with multi-AZ failover, automated backups, and IAM auth. Credentials are written to the requesting service namespace as a secret.
+  tags:
+    - database
+    - aws
+    - rds
+    - postgresql
+    - golden-path
+spec:
+  owner: platform-team
+  type: resource
+
+  parameters:
+    - title: Configure
+      required:
+        - instanceName
+        - ownerService
+        - dbName
+        - owner
+      properties:
+        instanceName:
+          title: Instance name
+          type: string
+          description: Unique RDS instance identifier (e.g. payments-db-prod)
+          pattern: '^[a-z][a-z0-9-]*[a-z0-9]$'
+          ui:autofocus: true
+        ownerService:
+          title: Owning service
+          type: string
+          description: The service that owns this database — credentials will be injected into its namespace
+          pattern: '^[a-z][a-z0-9-]*[a-z0-9]$'
+        dbName:
+          title: Database name
+          type: string
+          description: PostgreSQL database name (lowercase, underscores only)
+          default: appdb
+          pattern: '^[a-z][a-z0-9_]*$'
+        dbUsername:
+          title: Master username
+          type: string
+          default: appuser
+          pattern: '^[a-z][a-z0-9_]*$'
+        owner:
+          title: Owner
+          type: string
+          description: Team that owns this database
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: Group
+        awsRegion:
+          title: AWS region
+          type: string
+          default: us-east-1
+          enum:
+            - us-east-1
+            - us-west-2
+            - eu-west-1
+            - eu-central-1
+            - ap-southeast-1
+        postgresVersion:
+          title: Postgres version
+          type: string
+          default: '16'
+          enum:
+            - '14'
+            - '15'
+            - '16'
+            - '17'
+        instanceClass:
+          title: Instance class
+          type: string
+          default: db.t3.micro
+          enum:
+            - db.t3.micro
+            - db.t3.small
+            - db.t3.medium
+            - db.r6g.large
+          enumNames:
+            - 'db.t3.micro — dev/test (1 vCPU, 1 GB)'
+            - 'db.t3.small — small workloads (1 vCPU, 2 GB)'
+            - 'db.t3.medium — moderate load (2 vCPU, 4 GB)'
+            - 'db.r6g.large — production (2 vCPU, 16 GB)'
+        storageGb:
+          title: Allocated storage (GB)
+          type: integer
+          default: 20
+          minimum: 20
+          maximum: 1000
+        multiAz:
+          title: Multi-AZ
+          type: boolean
+          default: false
+          description: Enable Multi-AZ failover (recommended for production)
+        backupRetentionDays:
+          title: Backup retention (days)
+          type: integer
+          default: 7
+          enum:
+            - 7
+            - 14
+            - 30
+          enumNames:
+            - '7 days'
+            - '14 days'
+            - '30 days'
+        enableIamAuth:
+          title: Enable IAM authentication
+          type: boolean
+          default: true
+          description: Allow IAM database authentication in addition to password auth
+
+    - title: Review
+      description: Review your configuration before creating the pull request
+      properties:
+        repoUrl:
+          title: Platform repo
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+            allowedOwners:
+              - moatazeldebsy
+            allowedRepos:
+              - backstage-idp-starter
+
+  steps:
+    - id: fetch-template
+      name: Generate Terraform + K8s manifests
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          instanceName: ${{ parameters.instanceName }}
+          ownerService: ${{ parameters.ownerService }}
+          dbName: ${{ parameters.dbName }}
+          dbUsername: ${{ parameters.dbUsername }}
+          instanceClass: ${{ parameters.instanceClass }}
+          awsRegion: ${{ parameters.awsRegion }}
+          postgresVersion: ${{ parameters.postgresVersion }}
+          multiAz: ${{ parameters.multiAz }}
+          storageGb: ${{ parameters.storageGb }}
+          backupRetentionDays: ${{ parameters.backupRetentionDays }}
+          enableIamAuth: ${{ parameters.enableIamAuth }}
+          owner: ${{ parameters.owner }}
+
+    - id: open-pr
+      name: Open PR to provision database
+      action: publish:github:pull-request
+      continueOnError: true
+      input:
+        repoUrl: ${{ parameters.repoUrl }}
+        title: "feat(infra): provision Managed Postgres ${{ parameters.instanceName }}"
+        branchName: managed-postgres/${{ parameters.instanceName }}
+        description: |
+          Provisions a Managed Postgres (RDS) instance for `${{ parameters.ownerService }}`.
+
+          | Parameter | Value |
+          |-----------|-------|
+          | Instance | `${{ parameters.instanceName }}` |
+          | Postgres version | `${{ parameters.postgresVersion }}` |
+          | Instance class | `${{ parameters.instanceClass }}` |
+          | Storage | `${{ parameters.storageGb }} GB` |
+          | Multi-AZ | `${{ parameters.multiAz }}` |
+          | Backup retention | `${{ parameters.backupRetentionDays }} days` |
+          | IAM auth | `${{ parameters.enableIamAuth }}` |
+          | Region | `${{ parameters.awsRegion }}` |
+
+          **Resources created:**
+          - `terraform/infra/managed-postgres/${{ parameters.instanceName }}/` — Terraform module (RDS instance, parameter group, Secrets Manager secret, IAM role for IAM auth)
+          - `kubernetes/services/${{ parameters.ownerService }}/external-secret.yaml` — ExternalSecret syncing `DATABASE_URL` into the `services` namespace
+
+          **After merging:**
+          ```bash
+          cd terraform/infra/managed-postgres/${{ parameters.instanceName }}
+          terraform init && terraform apply
+          kubectl apply -f kubernetes/services/${{ parameters.ownerService }}/external-secret.yaml
+          kubectl rollout restart deployment/${{ parameters.ownerService }} -n services
+          ```
+        targetBranchName: main
+
+  output:
+    links:
+      - title: Pull Request
+        url: ${{ steps['open-pr'].output.remoteUrl }}
+    text:
+      - title: Next steps
+        content: |
+          1. Merge the pull request to create the Terraform files
+          2. Run `terraform init && terraform apply` in `terraform/infra/managed-postgres/${{ parameters.instanceName }}/`
+          3. Apply the ExternalSecret to sync credentials into your service namespace
+          4. Restart your service deployment to pick up the `DATABASE_URL` environment variable

@@ -1,0 +1,83 @@
+# OpenCost deployment for in-cluster cost visibility
+# Applied by bootstrap-local.sh and bootstrap.sh
+# Docs: https://www.opencost.io/docs/installation/helm
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: opencost
+  labels:
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/warn: restricted
+---
+# OpenCost is deployed via Helm in bootstrap scripts:
+#
+#   helm repo add opencost https://opencost.github.io/opencost-helm-chart
+#   helm upgrade --install opencost opencost/opencost \
+#     --namespace opencost \
+#     --values kubernetes/finops/opencost-values.yaml
+#
+# The ConfigMap below provides the Prometheus datasource so OpenCost
+# can read cluster metrics for cost attribution.
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: opencost-config
+  namespace: opencost
+data:
+  # Override via helm --set or opencost-values.yaml
+  PROMETHEUS_SERVER_ENDPOINT: "http://prometheus-operated.monitoring.svc.cluster.local:9090"
+  CLOUD_PROVIDER_API_KEY: ""
+  # AWS cost data requires IRSA — see terraform/iam.tf for the role
+  AWS_CLUSTER_ID: "idp-mvp"
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: opencost
+  namespace: opencost
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: opencost.idp.local
+      http:
+        paths:
+          # Cost model API — used by the Backstage FinOps plugin proxy.
+          # Must be listed before / so nginx matches it first.
+          - path: /allocation
+            pathType: Prefix
+            backend:
+              service:
+                name: opencost
+                port:
+                  number: 9003
+          # UI — React frontend served on port 9090 for browser access.
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: opencost
+                port:
+                  number: 9090
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: opencost
+  namespace: opencost
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: opencost
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+  namespaceSelector:
+    matchNames:
+      - opencost
