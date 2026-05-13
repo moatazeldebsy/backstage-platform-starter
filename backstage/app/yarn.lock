@@ -4614,16 +4614,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage/plugin-app-backend@npm:^0.5.12":
-  version: 0.5.12
-  resolution: "@backstage/plugin-app-backend@npm:0.5.12"
+"@backstage/plugin-app-backend@npm:^0.5.13":
+  version: 0.5.13
+  resolution: "@backstage/plugin-app-backend@npm:0.5.13"
   dependencies:
-    "@backstage/backend-plugin-api": "npm:^1.8.0"
-    "@backstage/config": "npm:^1.3.6"
-    "@backstage/config-loader": "npm:^1.10.9"
-    "@backstage/errors": "npm:^1.2.7"
-    "@backstage/plugin-app-node": "npm:^0.1.43"
-    "@backstage/plugin-auth-node": "npm:^0.6.14"
+    "@backstage/backend-plugin-api": "npm:^1.9.0"
+    "@backstage/config": "npm:^1.3.7"
+    "@backstage/config-loader": "npm:^1.10.10"
+    "@backstage/errors": "npm:^1.3.0"
+    "@backstage/plugin-app-node": "npm:^0.1.44"
+    "@backstage/plugin-auth-node": "npm:^0.7.0"
     "@backstage/types": "npm:^1.2.2"
     express: "npm:^4.22.0"
     express-promise-router: "npm:^4.1.0"
@@ -4634,20 +4634,20 @@ __metadata:
     lodash: "npm:^4.17.21"
     luxon: "npm:^3.0.0"
     yn: "npm:^4.0.0"
-  checksum: 10c0/df271ab12c22b121c3753c11300040602414c6e55cf9a3a0daa0cf573621ff454e6ea5adcdf939bf57db10834a66130c5256e3c42da023bbe9bf01c812a55a2f
+  checksum: 10c0/13f549c5b164052e54d5e7da3e07632b9e3e3237af12987dc5a9c7e79205e2b7cf8f0cd20591e0b02ec180715b8d607e3c7693455f7f6e75297d0193c79b44be
   languageName: node
   linkType: hard
 
-"@backstage/plugin-app-node@npm:^0.1.43":
-  version: 0.1.43
-  resolution: "@backstage/plugin-app-node@npm:0.1.43"
+"@backstage/plugin-app-node@npm:^0.1.44":
+  version: 0.1.44
+  resolution: "@backstage/plugin-app-node@npm:0.1.44"
   dependencies:
-    "@backstage/backend-plugin-api": "npm:^1.8.0"
-    "@backstage/config-loader": "npm:^1.10.9"
+    "@backstage/backend-plugin-api": "npm:^1.9.0"
+    "@backstage/config-loader": "npm:^1.10.10"
     "@types/express": "npm:^4.17.6"
     express: "npm:^4.22.0"
     fs-extra: "npm:^11.2.0"
-  checksum: 10c0/7621ae5e67db7fafe72554e99b752d582b41607242ad37b359ebb44e6aedca4ca24ce9bd45b6727ba4672c88df0133eedeb707d5b21688a6f787c1ca31a40af4
+  checksum: 10c0/bb2921971a5452dead3cd61da938cc4d3f6490709a604cdaff8bd405039aa4bc37cd6803f6cd553cb5524affc82fe3a5745647bb59004c0a9377250b1dad87f3
   languageName: node
   linkType: hard
 
@@ -18711,7 +18711,7 @@ __metadata:
     "@backstage/backend-defaults": "npm:^0.16.0"
     "@backstage/cli": "npm:^0.36.0"
     "@backstage/config": "npm:^1.3.6"
-    "@backstage/plugin-app-backend": "npm:^0.5.12"
+    "@backstage/plugin-app-backend": "npm:^0.5.13"
     "@backstage/plugin-auth-backend": "npm:^0.28.0"
     "@backstage/plugin-auth-backend-module-github-provider": "npm:^0.5.1"
     "@backstage/plugin-auth-backend-module-guest-provider": "npm:^0.2.17"
