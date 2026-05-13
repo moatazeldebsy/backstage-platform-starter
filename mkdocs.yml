@@ -21,6 +21,7 @@ nav:
   - Getting Started: getting-started.md
   - Architecture: architecture.md
   - Golden Path: golden-path.md
+  - idp CLI: cli.md
   - Local Setup: local-setup.md
   - Roadmap: roadmap.md
   - Runbooks:
