@@ -48,23 +48,17 @@
 # 1. Click "Use this template" on GitHub, then clone your new repo
 git clone https://github.com/YOUR_ORG/YOUR_REPO.git && cd YOUR_REPO
 
-# 2. Copy and populate the env files (required before running any script)
-cp local/.env.example local/.env                      # shared tokens: GITHUB_TOKEN, AWS_REGION, cluster name
-cp local/backstage/.env.example local/backstage/.env  # Backstage tokens: OAuth, K8s credentials
-# Edit both files and fill in your values before continuing
-# Optional — AI/ML stack: also set ANTHROPIC_API_KEY=<your-key> in local/.env
-
-# 3. Personalise placeholders AND bootstrap the platform (guided, interactive)
+# 2. Personalise placeholders AND bootstrap the platform (guided, interactive)
 ./scripts/setup.sh
 # → choose "local" when prompted for environment
 # → fill in GITHUB_TOKEN and OAuth credentials when prompted
 
-# 4. When prompted "Start Backstage now?", answer Y
+# 3. When prompted "Start Backstage now?", answer Y
 # setup.sh calls: ./scripts/bootstrap-local.sh --start-backstage
 # This builds the image, starts Docker Compose, wires nginx, seeds metrics
 ```
 
-`setup.sh` walks you through placeholder substitution (GitHub org, AWS account, region, cluster name), bootstraps the Kind cluster, and starts Backstage — all in one flow. Steps 3 and 4 can also be run independently for day-2 cluster recreates:
+`setup.sh` walks you through placeholder substitution (GitHub org, AWS account, region, cluster name), bootstraps the Kind cluster, and starts Backstage — all in one flow. Steps 2 and 3 can also be run independently for day-2 cluster recreates:
 
 ```bash
 ./scripts/bootstrap-local.sh              # cluster + platform (~10–15 min)
