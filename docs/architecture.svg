@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 820" width="760" height="820" font-family="Inter, Segoe UI, Arial, sans-serif">
+  <!-- Dark background -->
+  <rect width="760" height="820" fill="#111118"/>
+  <!-- Subtle dot grid -->
+  <defs>
+    <pattern id="dots" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#ffffff" opacity="0.04"/>
+    </pattern>
+  </defs>
+  <rect width="760" height="820" fill="url(#dots)"/>
+
+  <!-- ── ROW 1: Developer → Backstage Portal ── -->
+  <!-- Developer ellipse -->
+  <ellipse cx="90" cy="72" rx="68" ry="34" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="90" y="68" text-anchor="middle" fill="#e5e5e5" font-size="13" font-weight="500">&#128100;</text>
+  <text x="90" y="84" text-anchor="middle" fill="#e5e5e5" font-size="13" font-weight="500">Developer</text>
+
+  <!-- Arrow: Developer → Portal -->
+  <line x1="158" y1="72" x2="198" y2="72" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- Backstage Developer Portal -->
+  <rect x="210" y="48" width="390" height="48" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="405" y="78" text-anchor="middle" fill="#e5e5e5" font-size="15" font-weight="600">Backstage Developer Portal</text>
+
+  <!-- ── Arrows: Portal → Templates ── -->
+  <line x1="310" y1="96" x2="270" y2="176" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="500" y1="96" x2="500" y2="176" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ── ROW 2: Templates ── -->
+  <!-- Software Templates -->
+  <rect x="110" y="180" width="240" height="52" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="230" y="211" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">Software Templates (12)</text>
+
+  <!-- QA Testing Templates -->
+  <rect x="390" y="180" width="250" height="52" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="515" y="211" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">QA Testing Templates (13)</text>
+
+  <!-- ── Arrows: Templates → Helm ── -->
+  <line x1="230" y1="232" x2="320" y2="312" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="515" y1="232" x2="430" y2="312" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ── ROW 3: Helm Chart ── -->
+  <rect x="190" y="316" width="370" height="52" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="375" y="347" text-anchor="middle" fill="#e5e5e5" font-size="15" font-weight="600">Golden-Path Helm Chart</text>
+
+  <!-- ── Arrows: Helm → Platform layers ── -->
+  <line x1="265" y1="368" x2="155" y2="444" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="375" y1="368" x2="375" y2="444" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="485" y1="368" x2="575" y2="444" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ── ROW 4: Platform layers ── -->
+  <!-- AI/ML Stack -->
+  <rect x="30" y="448" width="200" height="72" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="130" y="474" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">AI/ML Stack</text>
+  <text x="130" y="492" text-anchor="middle" fill="#a0a8b8" font-size="12">KAgent, MLflow,</text>
+  <text x="130" y="508" text-anchor="middle" fill="#a0a8b8" font-size="12">MCP Server</text>
+
+  <!-- Observability -->
+  <rect x="265" y="448" width="220" height="72" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="375" y="474" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">Observability</text>
+  <text x="375" y="494" text-anchor="middle" fill="#a0a8b8" font-size="12">Prometheus, Grafana</text>
+
+  <!-- GitOps -->
+  <rect x="520" y="448" width="185" height="72" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="612" y="474" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">GitOps</text>
+  <text x="612" y="494" text-anchor="middle" fill="#a0a8b8" font-size="12">ArgoCD</text>
+
+  <!-- ── Arrows: Platform → Deployment ── -->
+  <line x1="130" y1="520" x2="145" y2="600" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+  <line x1="612" y1="520" x2="570" y2="600" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead)"/>
+
+  <!-- ── ROW 5: Deployment targets ── -->
+  <!-- Kind Cluster -->
+  <rect x="30" y="604" width="240" height="52" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="150" y="635" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">Local: Kind Cluster</text>
+
+  <!-- AWS EKS -->
+  <rect x="400" y="604" width="300" height="52" rx="8" fill="#1a2030" stroke="#f59e0b" stroke-width="2"/>
+  <text x="550" y="628" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">Production:</text>
+  <text x="550" y="647" text-anchor="middle" fill="#e5e5e5" font-size="14" font-weight="600">AWS EKS (Terraform)</text>
+
+  <!-- ── Arrowhead marker ── -->
+  <defs>
+    <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#f59e0b"/>
+    </marker>
+  </defs>
+</svg>

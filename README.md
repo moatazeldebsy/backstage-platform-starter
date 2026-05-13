@@ -14,6 +14,12 @@
      Host in docs/assets/demo.gif and update the path below. -->
 > **Golden path in 60 seconds:** scaffold a service → CI runs tests + builds image → ArgoCD deploys to Kind → Backstage shows health + metrics.
 
+## Architecture
+
+<p align="center">
+  <img src="docs/architecture.svg" alt="Platform Architecture" width="760"/>
+</p>
+
 ## Compatibility
 
 | Component | Tested version |
