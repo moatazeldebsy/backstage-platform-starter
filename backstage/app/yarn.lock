@@ -2512,19 +2512,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@backstage-community/plugin-tech-radar-backend@npm:^1.16.0":
-  version: 1.16.0
-  resolution: "@backstage-community/plugin-tech-radar-backend@npm:1.16.0"
+"@backstage-community/plugin-tech-radar-backend@npm:^1.17.1":
+  version: 1.17.1
+  resolution: "@backstage-community/plugin-tech-radar-backend@npm:1.17.1"
   dependencies:
-    "@backstage-community/plugin-tech-radar-common": "npm:^1.16.0"
-    "@backstage/backend-defaults": "npm:^0.16.0"
-    "@backstage/backend-plugin-api": "npm:^1.8.0"
-    "@backstage/config": "npm:^1.3.6"
+    "@backstage-community/plugin-tech-radar-common": "npm:^1.17.0"
+    "@backstage/backend-defaults": "npm:^0.17.0"
+    "@backstage/backend-plugin-api": "npm:^1.9.0"
+    "@backstage/config": "npm:^1.3.7"
     express: "npm:^4.17.1"
     express-promise-router: "npm:^4.1.0"
     node-fetch: "npm:^2.6.7"
     zod: "npm:^3.20.0"
-  checksum: 10c0/f9722050fb7988314778d9a1f33f75ab522fb0a4b6ed7520a9b967639d73d5c4676a3aeee3065f2e24c5fb1fe1fb841de0940cee43fa4cc97da681d45c9f003e
+  checksum: 10c0/d4637e2851b8ebd42dc20c5a8149ab6bdc38dfdb89a4833cf988c6e6b200848da2262ed299d7f6bcd2469755d930b393cb993b884e045820c1ec1eb477501eda
   languageName: node
   linkType: hard
 
@@ -2534,6 +2534,15 @@ __metadata:
   dependencies:
     zod: "npm:^3.20.0"
   checksum: 10c0/0dacd326f280b8fa5fb1fc112f6c0eeb5446cc065cf5885ee476d19ef7982124d3c7103976b59a3f9831fc7e91bf4d128cc5a595907a6ed96a736a8dc573cfb8
+  languageName: node
+  linkType: hard
+
+"@backstage-community/plugin-tech-radar-common@npm:^1.17.0":
+  version: 1.17.0
+  resolution: "@backstage-community/plugin-tech-radar-common@npm:1.17.0"
+  dependencies:
+    zod: "npm:^3.20.0"
+  checksum: 10c0/8c85d475a120119adefc82aef6851c33313628f9236729be0b860ea75764fdabd60a9e12c37d3e47a829de9bda5bd70b78cf4616993466a84b98c7143953828e
   languageName: node
   linkType: hard
 
@@ -18707,7 +18716,7 @@ __metadata:
     "@backstage-community/plugin-adr-backend": "npm:^0.20.0"
     "@backstage-community/plugin-announcements-backend": "npm:^0.23.0"
     "@backstage-community/plugin-tech-insights-backend": "npm:^2.5.2"
-    "@backstage-community/plugin-tech-radar-backend": "npm:^1.16.0"
+    "@backstage-community/plugin-tech-radar-backend": "npm:^1.17.1"
     "@backstage/backend-defaults": "npm:^0.16.0"
     "@backstage/cli": "npm:^0.36.0"
     "@backstage/config": "npm:^1.3.6"
