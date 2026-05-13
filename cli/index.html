@@ -1,0 +1,1573 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Golden-path platform for building and deploying services on EKS">
+      
+      
+      
+      
+        <link rel="prev" href="../golden-path/">
+      
+      
+        <link rel="next" href="../local-setup/">
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.27">
+    
+    
+      
+        <title>idp CLI - Internal Developer Platform</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.6543a935.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#idp-cli" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Internal Developer Platform" class="md-header__button md-logo" aria-label="Internal Developer Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Internal Developer Platform
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              idp CLI
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/moatazeldebsy/backstage-platform-starter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    moatazeldebsy/backstage-platform-starter
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../getting-started/" class="md-tabs__link">
+        
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../architecture/" class="md-tabs__link">
+        
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../golden-path/" class="md-tabs__link">
+        
+  
+    
+  
+  Golden Path
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  idp CLI
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../local-setup/" class="md-tabs__link">
+        
+  
+    
+  
+  Local Setup
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../roadmap/" class="md-tabs__link">
+        
+  
+    
+  
+  Roadmap
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../runbooks/" class="md-tabs__link">
+          
+  
+  Runbooks
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Internal Developer Platform" class="md-nav__button md-logo" aria-label="Internal Developer Platform" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Internal Developer Platform
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/moatazeldebsy/backstage-platform-starter" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    moatazeldebsy/backstage-platform-starter
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting Started
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Architecture
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../golden-path/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Golden Path
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    idp CLI
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    idp CLI
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idp-scaffold-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      idp scaffold service
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="idp scaffold service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#token-resolution-backstage-api-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Token resolution (Backstage API mode)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#github-org-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      GitHub org resolution
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      Examples
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-output-local" class="md-nav__link">
+    <span class="md-ellipsis">
+      Local output (--local)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#idp-scaffold-test-suite" class="md-nav__link">
+    <span class="md-ellipsis">
+      idp scaffold test-suite
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="idp scaffold test-suite">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#usage_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Usage
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common flags
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#suite-types-and-type-specific-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      Suite types and type-specific flags
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Suite types and type-specific flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#playwright-e2e-browser-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      playwright — E2E browser tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#k6-performance-load-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      k6 — Performance / load tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pact-consumer-driven-contract-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      pact — Consumer-driven contract tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#newman-api-postman-collection-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      newman — API (Postman) collection tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#zap-dast-security-scan-owasp-zap" class="md-nav__link">
+    <span class="md-ellipsis">
+      zap — DAST security scan (OWASP ZAP)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#datadog-synthetic-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      datadog — Synthetic monitoring
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-visual-regression-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      visual — Visual regression tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accessibility-wcag-accessibility-audit" class="md-nav__link">
+    <span class="md-ellipsis">
+      accessibility — WCAG accessibility audit
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cucumber-bdd-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      cucumber — BDD tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#appium-mobile-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      appium — Mobile tests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#chaos-chaos-engineering-chaos-mesh" class="md-nav__link">
+    <span class="md-ellipsis">
+      chaos — Chaos engineering (Chaos Mesh)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mutation-mutation-testing-stryker" class="md-nav__link">
+    <span class="md-ellipsis">
+      mutation — Mutation testing (Stryker)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testcontainers-integration-tests-with-real-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      testcontainers — Integration tests with real containers
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-output-local_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Local output (--local)
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#backstage-api-mode-vs-local-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      Backstage API mode vs local mode
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-hosted-github-actions-runner-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      Self-hosted GitHub Actions runner (optional)
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../local-setup/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Local Setup
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../roadmap/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Roadmap
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Runbooks
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            Runbooks
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runbooks/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runbooks/deployment-rollback/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Deployment Rollback
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runbooks/pod-crash-loop/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Pod Crash Loop
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runbooks/high-memory/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    High Memory
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runbooks/high-cpu/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    High CPU
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../runbooks/db-recovery/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Database Recovery
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/moatazeldebsy/backstage-platform-starter/edit/master/docs/cli.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="idp-cli">idp CLI<a class="headerlink" href="#idp-cli" title="Permanent link">&para;</a></h1>
+<p>The <code>idp</code> CLI is the golden-path command-line tool for scaffolding services and QA test suites. It uses the Backstage Scaffolder API when the portal is reachable, and falls back to local file generation when offline.</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Build and install to $(go env GOPATH)/bin/idp</span>
+make<span class="w"> </span>cli-build<span class="w">    </span><span class="c1"># builds to ./bin/idp</span>
+make<span class="w"> </span>cli-install<span class="w">  </span><span class="c1"># installs to $(go env GOPATH)/bin/idp</span>
+</code></pre></div></td></tr></table></div>
+<p>Confirm the install:</p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>--help
+</code></pre></div></td></tr></table></div>
+<hr />
+<h2 id="idp-scaffold-service"><code>idp scaffold service</code><a class="headerlink" href="#idp-scaffold-service" title="Permanent link">&para;</a></h2>
+<p>Scaffold a new microservice. When Backstage is reachable the full golden path runs (GitHub repo created, service registered in catalog, GitOps PR opened, TechDocs generated). Otherwise files are generated locally under <code>services/&lt;name&gt;/</code>.</p>
+<h3 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>idp scaffold service --name &lt;name&gt; --type &lt;type&gt; [flags]
+</code></pre></div></td></tr></table></div>
+<h3 id="flags">Flags<a class="headerlink" href="#flags" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--name</code></td>
+<td><em>(required)</em></td>
+<td>Service name — lowercase alphanumeric + hyphens</td>
+</tr>
+<tr>
+<td><code>--type</code></td>
+<td><code>nodejs</code></td>
+<td>Runtime: <code>nodejs</code> | <code>python</code> | <code>go</code></td>
+</tr>
+<tr>
+<td><code>--namespace</code></td>
+<td><code>services</code></td>
+<td>Kubernetes namespace</td>
+</tr>
+<tr>
+<td><code>--owner</code></td>
+<td><code>group:default/platform-team</code></td>
+<td>Backstage catalog owner ref</td>
+</tr>
+<tr>
+<td><code>--description</code></td>
+<td></td>
+<td>Short description used by Backstage template</td>
+</tr>
+<tr>
+<td><code>--local</code></td>
+<td><code>false</code></td>
+<td>Skip Backstage API, generate files locally</td>
+</tr>
+<tr>
+<td><code>--backstage-url</code></td>
+<td><code>http://backstage.idp.local</code></td>
+<td>Backstage base URL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="token-resolution-backstage-api-mode">Token resolution (Backstage API mode)<a class="headerlink" href="#token-resolution-backstage-api-mode" title="Permanent link">&para;</a></h3>
+<p>The CLI resolves the auth token in this priority order:</p>
+<ol>
+<li><code>--token</code> flag</li>
+<li><code>BACKSTAGE_TOKEN</code> environment variable</li>
+<li><code>BACKSTAGE_AUTH_SECRET</code> in <code>local/backstage/.env</code></li>
+<li>First static <code>externalAccess</code> token in <code>backstage/app-config.local.yaml</code></li>
+</ol>
+<h3 id="github-org-resolution">GitHub org resolution<a class="headerlink" href="#github-org-resolution" title="Permanent link">&para;</a></h3>
+<p>Set <code>GITHUB_ORG</code> (or <code>GH_ORG</code>) in your shell or in <code>local/.env</code>. If unset, the CLI warns and uses the placeholder <code>YOUR_GITHUB_ORG</code>.</p>
+<h3 id="examples">Examples<a class="headerlink" href="#examples" title="Permanent link">&para;</a></h3>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 1</span>
+<span class="normal"> 2</span>
+<span class="normal"> 3</span>
+<span class="normal"> 4</span>
+<span class="normal"> 5</span>
+<span class="normal"> 6</span>
+<span class="normal"> 7</span>
+<span class="normal"> 8</span>
+<span class="normal"> 9</span>
+<span class="normal">10</span>
+<span class="normal">11</span>
+<span class="normal">12</span>
+<span class="normal">13</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="c1"># Node.js service (auto-detects Backstage)</span>
+idp<span class="w"> </span>scaffold<span class="w"> </span>service<span class="w"> </span>--name<span class="w"> </span>order-svc<span class="w"> </span>--type<span class="w"> </span>nodejs
+
+<span class="c1"># Python FastAPI service, local generation (offline / pre-Backstage)</span>
+idp<span class="w"> </span>scaffold<span class="w"> </span>service<span class="w"> </span>--name<span class="w"> </span>data-pipeline<span class="w"> </span>--type<span class="w"> </span>python<span class="w"> </span>--local
+
+<span class="c1"># Go service in a custom namespace</span>
+idp<span class="w"> </span>scaffold<span class="w"> </span>service<span class="w"> </span>--name<span class="w"> </span>inventory-svc<span class="w"> </span>--type<span class="w"> </span>go<span class="w"> </span>--namespace<span class="w"> </span>backend
+
+<span class="c1"># Explicit description and owner</span>
+idp<span class="w"> </span>scaffold<span class="w"> </span>service<span class="w"> </span>--name<span class="w"> </span>billing-svc<span class="w"> </span>--type<span class="w"> </span>nodejs<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;Billing microservice&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--owner<span class="w"> </span>group:default/payments-team
+</code></pre></div></td></tr></table></div>
+<h3 id="local-output-local">Local output (<code>--local</code>)<a class="headerlink" href="#local-output-local" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span>
+<span class="normal">5</span>
+<span class="normal">6</span>
+<span class="normal">7</span>
+<span class="normal">8</span>
+<span class="normal">9</span></pre></div></td><td class="code"><div><pre><span></span><code>services/&lt;name&gt;/
+├── Dockerfile
+├── catalog-info.yaml
+├── helm-values.yaml
+├── helm-values-local.yaml
+├── helm-values-dev.yaml
+├── helm-values-staging.yaml
+├── README.md
+└── src/            # language-specific source files
+</code></pre></div></td></tr></table></div>
+<hr />
+<h2 id="idp-scaffold-test-suite"><code>idp scaffold test-suite</code><a class="headerlink" href="#idp-scaffold-test-suite" title="Permanent link">&para;</a></h2>
+<p>Scaffold a QA / testing suite for an existing service. Supported types cover the full testing pyramid from unit contracts to chaos engineering.</p>
+<h3 id="usage_1">Usage<a class="headerlink" href="#usage_1" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>idp scaffold test-suite --name &lt;name&gt; --type &lt;type&gt; --service &lt;service&gt; [flags]
+</code></pre></div></td></tr></table></div>
+<h3 id="common-flags">Common flags<a class="headerlink" href="#common-flags" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--name</code></td>
+<td><em>(required)</em></td>
+<td>Suite name — lowercase alphanumeric + hyphens</td>
+</tr>
+<tr>
+<td><code>--type</code></td>
+<td><em>(required)</em></td>
+<td>Suite type (see table below)</td>
+</tr>
+<tr>
+<td><code>--service</code></td>
+<td><em>(required)</em></td>
+<td>Target service name</td>
+</tr>
+<tr>
+<td><code>--namespace</code></td>
+<td><code>services</code></td>
+<td>Kubernetes namespace of the target service</td>
+</tr>
+<tr>
+<td><code>--owner</code></td>
+<td><code>group:default/platform-team</code></td>
+<td>Backstage catalog owner ref</td>
+</tr>
+<tr>
+<td><code>--description</code></td>
+<td></td>
+<td>Short description</td>
+</tr>
+<tr>
+<td><code>--local</code></td>
+<td><code>false</code></td>
+<td>Skip Backstage API, generate files locally</td>
+</tr>
+<tr>
+<td><code>--backstage-url</code></td>
+<td><code>http://backstage.idp.local</code></td>
+<td>Backstage base URL</td>
+</tr>
+</tbody>
+</table>
+<h3 id="suite-types-and-type-specific-flags">Suite types and type-specific flags<a class="headerlink" href="#suite-types-and-type-specific-flags" title="Permanent link">&para;</a></h3>
+<h4 id="playwright-e2e-browser-tests"><code>playwright</code> — E2E browser tests<a class="headerlink" href="#playwright-e2e-browser-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-e2e<span class="w"> </span>--type<span class="w"> </span>playwright<span class="w"> </span>--service<span class="w"> </span>my-svc
+</code></pre></div></td></tr></table></div>
+<p>No extra flags. Generates a Playwright TypeScript suite with GitHub Actions workflow.</p>
+<hr />
+<h4 id="k6-performance-load-tests"><code>k6</code> — Performance / load tests<a class="headerlink" href="#k6-performance-load-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-load<span class="w"> </span>--type<span class="w"> </span>k6<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--vus<span class="w"> </span><span class="m">50</span><span class="w"> </span>--duration<span class="w"> </span>5m<span class="w"> </span>--p95<span class="w"> </span><span class="m">300</span>
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--vus</code></td>
+<td><code>10</code></td>
+<td>Number of virtual users</td>
+</tr>
+<tr>
+<td><code>--duration</code></td>
+<td><code>30s</code></td>
+<td>Load test duration (e.g. <code>1m</code>, <code>5m</code>)</td>
+</tr>
+<tr>
+<td><code>--p95</code></td>
+<td><code>500</code></td>
+<td>p95 latency threshold in ms</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="pact-consumer-driven-contract-tests"><code>pact</code> — Consumer-driven contract tests<a class="headerlink" href="#pact-consumer-driven-contract-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-contracts<span class="w"> </span>--type<span class="w"> </span>pact<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--consumer<span class="w"> </span>frontend<span class="w"> </span>--provider<span class="w"> </span>my-svc<span class="w"> </span>--broker-url<span class="w"> </span>https://YOUR_ORG.pactflow.io
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--consumer</code></td>
+<td><code>&lt;name&gt;-consumer</code></td>
+<td>Consumer name</td>
+</tr>
+<tr>
+<td><code>--provider</code></td>
+<td><code>&lt;service&gt;</code></td>
+<td>Provider name</td>
+</tr>
+<tr>
+<td><code>--broker-url</code></td>
+<td><code>https://YOUR_ORG.pactflow.io</code></td>
+<td>Pact Broker URL</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="newman-api-postman-collection-tests"><code>newman</code> — API (Postman) collection tests<a class="headerlink" href="#newman-api-postman-collection-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-api<span class="w"> </span>--type<span class="w"> </span>newman<span class="w"> </span>--service<span class="w"> </span>my-svc
+</code></pre></div></td></tr></table></div>
+<p>No extra flags. Generates a Newman runner with a Postman collection template.</p>
+<hr />
+<h4 id="zap-dast-security-scan-owasp-zap"><code>zap</code> — DAST security scan (OWASP ZAP)<a class="headerlink" href="#zap-dast-security-scan-owasp-zap" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-sec<span class="w"> </span>--type<span class="w"> </span>zap<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--scan-type<span class="w"> </span>baseline<span class="w"> </span>--fail-risk<span class="w"> </span>High
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--scan-type</code></td>
+<td><code>baseline</code></td>
+<td>Scan type: <code>baseline</code> | <code>full</code> | <code>api</code> | <code>graphql</code></td>
+</tr>
+<tr>
+<td><code>--openapi-url</code></td>
+<td><code>http://localhost:8080/openapi.json</code></td>
+<td>OpenAPI spec URL</td>
+</tr>
+<tr>
+<td><code>--fail-risk</code></td>
+<td><code>High</code></td>
+<td>Minimum risk level to fail: <code>Low</code> | <code>Medium</code> | <code>High</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="datadog-synthetic-monitoring"><code>datadog</code> — Synthetic monitoring<a class="headerlink" href="#datadog-synthetic-monitoring" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-synthetics<span class="w"> </span>--type<span class="w"> </span>datadog<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dd-site<span class="w"> </span>datadoghq.eu
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--dd-site</code></td>
+<td><code>datadoghq.eu</code></td>
+<td>Datadog site (<code>datadoghq.com</code>, <code>datadoghq.eu</code>, etc.)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="visual-visual-regression-tests"><code>visual</code> — Visual regression tests<a class="headerlink" href="#visual-visual-regression-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-visual<span class="w"> </span>--type<span class="w"> </span>visual<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--threshold<span class="w"> </span><span class="m">0</span>.1
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--threshold</code></td>
+<td><code>0.2</code></td>
+<td>Max pixel diff ratio (0.0–1.0)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="accessibility-wcag-accessibility-audit"><code>accessibility</code> — WCAG accessibility audit<a class="headerlink" href="#accessibility-wcag-accessibility-audit" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-a11y<span class="w"> </span>--type<span class="w"> </span>accessibility<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--wcag<span class="w"> </span>wcag21aa
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--wcag</code></td>
+<td><code>wcag2aa</code></td>
+<td>WCAG level: <code>wcag2a</code> | <code>wcag2aa</code> | <code>wcag21aa</code> | <code>wcag22aa</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="cucumber-bdd-tests"><code>cucumber</code> — BDD tests<a class="headerlink" href="#cucumber-bdd-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-bdd<span class="w"> </span>--type<span class="w"> </span>cucumber<span class="w"> </span>--service<span class="w"> </span>my-svc
+</code></pre></div></td></tr></table></div>
+<p>No extra flags. Generates a Cucumber/Gherkin suite with step definitions.</p>
+<hr />
+<h4 id="appium-mobile-tests"><code>appium</code> — Mobile tests<a class="headerlink" href="#appium-mobile-tests" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-mobile<span class="w"> </span>--type<span class="w"> </span>appium<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--platform<span class="w"> </span>ios<span class="w"> </span>--appium-server<span class="w"> </span>http://localhost:4723
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--platform</code></td>
+<td><code>android</code></td>
+<td>Mobile platform: <code>android</code> | <code>ios</code></td>
+</tr>
+<tr>
+<td><code>--appium-server</code></td>
+<td><code>http://localhost:4723</code></td>
+<td>Appium server URL</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="chaos-chaos-engineering-chaos-mesh"><code>chaos</code> — Chaos engineering (Chaos Mesh)<a class="headerlink" href="#chaos-chaos-engineering-chaos-mesh" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-chaos<span class="w"> </span>--type<span class="w"> </span>chaos<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--experiments<span class="w"> </span>pod-failure,network-latency<span class="w"> </span>--chaos-duration<span class="w"> </span>2m
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--experiments</code></td>
+<td><code>pod-failure,network-latency</code></td>
+<td>Comma-separated experiment types</td>
+</tr>
+<tr>
+<td><code>--chaos-duration</code></td>
+<td><code>1m</code></td>
+<td>Experiment duration (e.g. <code>1m</code>, <code>5m</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="mutation-mutation-testing-stryker"><code>mutation</code> — Mutation testing (Stryker)<a class="headerlink" href="#mutation-mutation-testing-stryker" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-mutation<span class="w"> </span>--type<span class="w"> </span>mutation<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--score<span class="w"> </span><span class="m">80</span><span class="w"> </span>--test-runner<span class="w"> </span>jest
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--score</code></td>
+<td><code>70</code></td>
+<td>Minimum mutation score percentage</td>
+</tr>
+<tr>
+<td><code>--test-runner</code></td>
+<td><code>jest</code></td>
+<td>Stryker test runner: <code>jest</code> | <code>mocha</code> | <code>jasmine</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h4 id="testcontainers-integration-tests-with-real-containers"><code>testcontainers</code> — Integration tests with real containers<a class="headerlink" href="#testcontainers-integration-tests-with-real-containers" title="Permanent link">&para;</a></h4>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span></pre></div></td><td class="code"><div><pre><span></span><code>idp<span class="w"> </span>scaffold<span class="w"> </span>test-suite<span class="w"> </span>--name<span class="w"> </span>my-integration<span class="w"> </span>--type<span class="w"> </span>testcontainers<span class="w"> </span>--service<span class="w"> </span>my-svc<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--containers<span class="w"> </span>postgres,redis
+</code></pre></div></td></tr></table></div>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--containers</code></td>
+<td><code>postgres</code></td>
+<td>Comma-separated container images</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="local-output-local_1">Local output (<code>--local</code>)<a class="headerlink" href="#local-output-local_1" title="Permanent link">&para;</a></h3>
+<p>All test suite types produce the same structure:</p>
+<div class="language-text highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span>
+<span class="normal">2</span>
+<span class="normal">3</span>
+<span class="normal">4</span></pre></div></td><td class="code"><div><pre><span></span><code>test-suites/&lt;name&gt;/
+├── catalog-info.yaml
+├── mkdocs.yml
+└── &lt;type-specific test files&gt;
+</code></pre></div></td></tr></table></div>
+<hr />
+<h2 id="backstage-api-mode-vs-local-mode">Backstage API mode vs local mode<a class="headerlink" href="#backstage-api-mode-vs-local-mode" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Backstage API mode</th>
+<th>Local mode (<code>--local</code>)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Trigger</strong></td>
+<td>Backstage reachable at <code>--backstage-url</code></td>
+<td>Backstage unreachable, or <code>--local</code> flag set</td>
+</tr>
+<tr>
+<td><strong>What happens</strong></td>
+<td>Scaffolder API called → GitHub repo created, catalog entry registered, GitOps PR opened, TechDocs generated</td>
+<td>Files written directly into this repo under <code>services/</code> or <code>test-suites/</code></td>
+</tr>
+<tr>
+<td><strong>Requires</strong></td>
+<td>Running Backstage + valid auth token</td>
+<td>Nothing (fully offline)</td>
+</tr>
+<tr>
+<td><strong>Best for</strong></td>
+<td>Production golden-path workflow</td>
+<td>Local dev, CI pre-Backstage, quick iteration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="self-hosted-github-actions-runner-optional">Self-hosted GitHub Actions runner (optional)<a class="headerlink" href="#self-hosted-github-actions-runner-optional" title="Permanent link">&para;</a></h2>
+<p>Wire a self-hosted runner so CI/CD runs inside your local Kind cluster:</p>
+<div class="language-bash highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">1</span></pre></div></td><td class="code"><div><pre><span></span><code>./scripts/setup-runner.sh<span class="w"> </span>--repo<span class="w"> </span>&lt;service-name&gt;
+</code></pre></div></td></tr></table></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../golden-path/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Golden Path">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Golden Path
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../local-setup/" class="md-footer__link md-footer__link--next" aria-label="Next: Local Setup">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Local Setup
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.tabs", "navigation.sections", "toc.integrate", "navigation.footer", "content.action.edit"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.ad660dcc.min.js"></script>
+      
+        <script src="../search/main.js"></script>
+      
+    
+  </body>
+</html>
