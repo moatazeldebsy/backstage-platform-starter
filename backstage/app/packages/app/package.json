@@ -17,7 +17,7 @@
     "@backstage-community/plugin-adr": "^0.23.0",
     "@backstage-community/plugin-announcements": "^2.8.0",
     "@backstage-community/plugin-announcements-react": "^0.24.0",
-    "@backstage-community/plugin-github-actions": "^0.22.0",
+    "@backstage-community/plugin-github-actions": "^1.0.0",
     "@backstage-community/plugin-tech-radar": "^1.17.0",
     "@backstage/cli": "^0.36.0",
     "@backstage/core-compat-api": "^0.5.9",
