@@ -44,33 +44,138 @@
 
 ## Quick Start
 
+### Prerequisites
+
+| Tool | Min version | Install |
+|------|-------------|---------|
+| Docker | latest | [docs.docker.com](https://docs.docker.com/get-docker/) |
+| Kind | ≥ 0.27 | `brew install kind` |
+| kubectl | any | `brew install kubectl` |
+| Helm | 3.x / 4.x | `brew install helm` |
+| Go | 1.21+ | `brew install go` *(needed to build the `idp` CLI)* |
+| Node.js | 24 LTS | `brew install node` *(needed for Backstage dev server)* |
+
+---
+
+### Step 1 — Clone & configure env files
+
 ```bash
-# 1. Click "Use this template" on GitHub, then clone your new repo
+# Click "Use this template" on GitHub, then clone your new repo
 git clone https://github.com/YOUR_ORG/YOUR_REPO.git && cd YOUR_REPO
 
-# 2. Personalise placeholders AND bootstrap the platform (guided, interactive)
+# Copy and fill in the env files — required before running any script
+cp local/.env.example local/.env                      # shared: GITHUB_TOKEN, AWS_REGION, cluster name
+cp local/backstage/.env.example local/backstage/.env  # Backstage: OAuth client ID/secret, K8s credentials
+# Edit both files and fill in your values
+
+# Optional — AI/ML stack: also set ANTHROPIC_API_KEY in local/.env
+```
+
+---
+
+### Step 2 — Bootstrap the platform (local, no AWS needed)
+
+Run the guided setup once — replaces placeholders for your org, boots the Kind cluster, and starts Backstage:
+
+```bash
 ./scripts/setup.sh
 # → choose "local" when prompted for environment
 # → fill in GITHUB_TOKEN and OAuth credentials when prompted
-
-# 3. When prompted "Start Backstage now?", answer Y
-# setup.sh calls: ./scripts/bootstrap-local.sh --start-backstage
-# This builds the image, starts Docker Compose, wires nginx, seeds metrics
+# → answer Y to "Start Backstage now?" at the end
 ```
 
-`setup.sh` walks you through placeholder substitution (GitHub org, AWS account, region, cluster name), bootstraps the Kind cluster, and starts Backstage — all in one flow. Steps 2 and 3 can also be run independently for day-2 cluster recreates:
+**Day-2 cluster recreate** (skip the interactive flow):
 
 ```bash
-./scripts/bootstrap-local.sh              # cluster + platform (~10–15 min)
-./scripts/bootstrap-local.sh --start-backstage  # Backstage (~2 min)
+./scripts/bootstrap-local.sh                    # Kind cluster + nginx + Prometheus/Grafana + ArgoCD (~10–15 min)
+./scripts/bootstrap-local.sh --skip-obs         # same but skip observability stack (faster)
+./scripts/bootstrap-local.sh --start-backstage  # build image, start Docker Compose, wire nginx, seed metrics (~2 min)
+./scripts/bootstrap-local.sh --destroy          # tear everything down
 ```
 
-After that, Backstage is at `http://backstage.idp.local` and hello-service at `http://hello-service.idp.local`.
+---
+
+### Step 3 — Access local services
+
+All `/etc/hosts` entries (`*.idp.local → 127.0.0.1`) are written automatically by `bootstrap-local.sh` (may need `sudo` on first run).
+
+| Service | URL | Credentials |
+|---------|-----|-------------|
+| **Backstage** | http://backstage.idp.local | — (guest mode) |
+| **hello-service** | http://hello-service.idp.local | — |
+| **Grafana** | http://grafana.idp.local | `admin` / `admin` |
+| **ArgoCD** | http://argocd.idp.local | `admin` / *(see note below)* |
+| **Prometheus** | http://prometheus.idp.local | — |
+| **OpenCost** | http://opencost.idp.local | — |
+| **Local registry** | localhost:5003 | — (no auth) |
+
+> **ArgoCD password:** `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+
+---
+
+### Step 4 — AI/ML platform (optional)
+
+Requires `ANTHROPIC_API_KEY` set in `local/.env`. Run after `bootstrap-local.sh` completes.
+
+```bash
+./scripts/bootstrap-ai.sh                  # KAgent + MLflow + IDP MCP Server (~5 min)
+./scripts/bootstrap-ai.sh --skip-mlflow    # skip MLflow
+./scripts/bootstrap-ai.sh --skip-kagent    # skip KAgent
+./scripts/bootstrap-ai.sh --skip-mcp       # skip IDP MCP Server build
+./scripts/bootstrap-ai.sh --destroy        # remove AI/ML stack only (core platform stays up)
+```
+
+| Service | URL |
+|---------|-----|
+| **KAgent UI** | http://kagent.idp.local |
+| **AI Assistant** (Backstage) | http://backstage.idp.local/ai-assistant |
+| **MLflow UI** | http://mlflow.idp.local |
+| **IDP MCP Server** | http://idp-mcp-server.idp.local/healthz |
+
+The AI Assistant lets you scaffold services in one message — provide `name`, `description`, and `owner` and KAgent scaffolds immediately via the IDP MCP Server.
+
+---
+
+### Step 5 — Scaffold a service (golden path)
+
+Build the `idp` CLI once (also built automatically by `setup.sh`), then use the CLI or the Backstage UI (→ **Create**):
+
+```bash
+make cli-build   # → ./bin/idp
+
+# Service scaffolding — nodejs | python | go
+idp scaffold service --name payments-api --type nodejs
+idp scaffold service --name payments-api --type python --local   # offline / pre-Backstage
+
+# QA test suite scaffolding — 13 types available
+idp scaffold test-suite --name payments-e2e   --type playwright    --service payments-api
+idp scaffold test-suite --name payments-load  --type k6            --service payments-api --vus 50 --duration 5m
+idp scaffold test-suite --name payments-sec   --type zap           --service payments-api --scan-type baseline
+idp scaffold test-suite --name payments-a11y  --type accessibility --service payments-api --wcag wcag21aa
+idp scaffold test-suite --name payments-chaos --type chaos         --service payments-api --chaos-duration 2m
+idp scaffold test-suite --help   # list all 13 types and flags
+```
+
+When Backstage is reachable, the CLI uses its Scaffolder API — full golden path (GitHub repo, catalog registration, TechDocs, GitOps PR). With `--local`, files are generated directly in this repo.
+
+---
+
+### Step 6 — Bootstrap on AWS (EKS)
+
+```bash
+cp terraform/terraform.tfvars.example terraform/terraform.tfvars
+# Edit terraform/terraform.tfvars — set github_org, aws_region, cluster_name
+./scripts/bootstrap.sh
+```
+
+See [docs/getting-started.md](docs/getting-started.md) for the full AWS walkthrough.
+
+---
 
 ## Platform Summary
 
-| Layer | Local | AWS |
-|-------|-------|-----|
+| Layer | Local (Kind) | AWS (EKS) |
+|-------|-------------|-----------|
 | Compute | Kind (Kubernetes in Docker) | Amazon EKS 1.29 |
 | Container registry | Local registry (`localhost:5003`) | Amazon ECR |
 | Ingress | nginx ingress controller | AWS Load Balancer Controller (ALB) |
@@ -80,62 +185,6 @@ After that, Backstage is at `http://backstage.idp.local` and hello-service at `h
 | Deployment | Helm (`helm/service-template`) | Helm (`helm/service-template`) |
 | Developer portal | Backstage (Docker Compose) | Backstage (EKS) |
 | Observability | Prometheus + Grafana | CloudWatch + Grafana |
-
-## Quick Start
-
-### Local (no AWS account needed)
-
-```bash
-# Prerequisites: kind, kubectl, helm, docker
-./scripts/bootstrap-local.sh
-
-# Access hello-service
-curl http://hello-service.idp.local   # after adding /etc/hosts entry
-```
-
-### Backstage (developer portal)
-
-```bash
-# Set up environment files (first time only)
-cp local/.env.example local/.env                        # shared tokens (GitHub, AWS, cluster name)
-cp local/backstage/.env.example local/backstage/.env    # Backstage-specific tokens (OAuth, K8s)
-# Edit both files and fill in your values
-# For AI/ML stack (optional): also set ANTHROPIC_API_KEY=<your-key> in local/.env
-
-# Build image, start Docker Compose, wire nginx, seed metrics (after bootstrap-local.sh)
-./scripts/bootstrap-local.sh --start-backstage
-
-# Open http://backstage.idp.local
-```
-
-### Local Access URLs
-
-After `bootstrap-local.sh` completes and Backstage is running, everything is reachable via `/etc/hosts` entries (written automatically by the script):
-
-| Service | URL | Default credentials |
-|---|---|---|
-| **Backstage** | http://backstage.idp.local (or http://localhost:3000) | — (guest mode) |
-| **hello-service** | http://hello-service.idp.local | — |
-| **Grafana** | http://grafana.idp.local | `admin` / `admin` |
-| **ArgoCD** | http://argocd.idp.local | `admin` / *(run `kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" \| base64 -d`)* |
-| **Prometheus** | http://prometheus.idp.local | — |
-| **OpenCost** | http://opencost.idp.local | — |
-| **KAgent UI** | http://kagent.idp.local | — (requires `bootstrap-ai.sh`) |
-| **MLflow UI** | http://mlflow.idp.local | — (requires `bootstrap-ai.sh`) |
-| **IDP MCP Server** | http://idp-mcp-server.idp.local/healthz | — (requires `bootstrap-ai.sh`) |
-| **Local registry** | localhost:5003 | — (no auth) |
-
-> `/etc/hosts` entries are added to `127.0.0.1` by `bootstrap-local.sh`. You may need `sudo` on first run.
-
-### AWS
-
-```bash
-cp terraform/terraform.tfvars.example terraform/terraform.tfvars
-# Edit terraform/terraform.tfvars — set github_org, aws_region, cluster_name
-./scripts/bootstrap.sh
-```
-
-See [docs/getting-started.md](docs/getting-started.md) for the full walkthrough.
 
 ## Project Structure
 
