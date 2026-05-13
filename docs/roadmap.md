@@ -23,12 +23,15 @@ Status is updated as work progresses.
 
 | Feature | Details |
 |---------|---------|
-| Golden path templates | Node.js, Python, Go, React, Terraform, Deploy-to-Kind (7 templates) |
+| Golden path templates | 12 software templates — Node.js, Python, Go, React, Terraform, Deploy-to-Kind, Team namespace, RDS, Add-secret, AI Agent, ML Experiment, MCP Server |
+| QA testing templates | 13 test-suite scaffold templates — Playwright, k6, Pact, Newman, ZAP, Datadog, Visual, Accessibility, Cucumber, Appium, Chaos Mesh, Stryker, Testcontainers |
+| `idp` CLI | Golden-path CLI (`idp scaffold service` + `idp scaffold test-suite`) with Backstage API mode and local fallback; all 13 test-suite types; full CLI reference in `docs/cli.md` |
+| Architecture diagram | Dark-theme SVG architecture diagram in `docs/architecture.svg`, embedded in README |
 | CI pipeline | Multi-language test detection, ECR push, OIDC auth, graceful skip when secrets absent |
 | EKS platform | VPC, EKS v1.29, ECR, RDS, Secrets Manager via Terraform |
 | Observability | Prometheus + Grafana, DORA metrics exporter, hello-service + QA dashboards |
 | OPA/Gatekeeper policies | deny-latest-tag, require-health-probes, require-resource-limits, require-labels, require-cost-tags |
-| Backstage portal | 7 templates, custom scaffolder actions (`idpLocalDeploy`, `idpProvisionSecret`, `idpSetRepoSecrets`), TechDocs, Kubernetes plugin |
+| Backstage portal | 12 software templates + 13 QA templates, custom scaffolder actions (`idpLocalDeploy`, `idpProvisionSecret`, `idpSetRepoSecrets`), TechDocs, Kubernetes plugin, AI Assistant page (`/ai-assistant`) |
 | Multi-env namespaces | `services-dev`, `services-staging`, `services-prod` with Pod Security Standards |
 | DORA metrics | Deployment frequency, lead time, MTTR, change failure rate — CloudWatch (AWS) + Pushgateway (local) |
 | Community health | CONTRIBUTING.md, CODE_OF_CONDUCT.md, issue templates, PR template, CODEOWNERS |
@@ -118,9 +121,10 @@ directly affects GitHub discoverability, first-run experience, or contributor co
 | Item | Status | Notes |
 |------|--------|-------|
 | Demo GIF / screenshot in README | 📋 | #1 driver of GitHub stars; shows the golden path end-to-end in 30 seconds |
+| Architecture diagram in README | ✅ | `docs/architecture.svg` — dark-theme flowchart embedded in README |
 | GitHub Pages deployment (MkDocs) | 📋 | `mkdocs.yml` is configured but docs aren't published; zero discoverability without it |
 | Trivy + Cosign in CI | ✅ | Trivy vulnerability scan + Cosign image signing in CI pipeline |
-| Compatibility matrix | 📋 | Backstage v1.49, K8s 1.32, Helm 3.x, Kind 0.27 — to be declared |
+| Compatibility matrix | ✅ | Declared in README — Backstage v1.49.1, K8s 1.29/1.33.1, Helm 3.x/4.x, Kind ≥ 0.27 |
 | Semantic versioning + `CHANGELOG.md` | ✅ | `CHANGELOG.md` follows Keep-a-Changelog format; v0.1.0 tagged |
 | SLO definitions (Sloth) | ✅ | `observability/slo/hello-service-slos.yaml` — 99.5% availability, p99 < 500ms |
 | Complete template library (add-secret, rds-database) | ✅ | `add-secret/`, `rds-database/`, `s3-bucket/`, `kafka-topic/`, `eks-cluster/` all added |
@@ -170,7 +174,7 @@ to under 10 minutes.
 | DORA metrics Backstage widget | 🔴 High | Homepage card showing deployment frequency and MTTR per team |
 | Trivy results in Backstage | 🟡 Medium | Post-CI Trivy JSON → catalog entity; security tab shows CVE count per service |
 | External Secrets Operator full loop | 🟡 Medium | `idpProvisionSecret` extended to emit `ExternalSecret` CRD; automatic rotation every 30 days |
-| Platform CLI (`platformctl`) | 🟡 Medium | Go CLI wrapping `create-service.sh`, `setup-runner.sh`; `--help` + shell autocomplete |
+| `idp` CLI | ✅ Shipped | Go CLI — `idp scaffold service` (nodejs/python/go) + `idp scaffold test-suite` (13 types); Backstage API mode + local fallback; full reference in `docs/cli.md` |
 | ECR repository provisioner | 🟢 Low | `idp:provision-ecr` scaffolder action; creates ECR repo + lifecycle policy + IRSA |
 | Namespace provisioner action | 🟢 Low | `idp:create-namespace` for fast-path team onboarding |
 
