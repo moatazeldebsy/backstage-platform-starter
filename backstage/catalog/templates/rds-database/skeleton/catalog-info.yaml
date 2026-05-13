@@ -1,0 +1,20 @@
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: ${{ values.instanceName }}
+  description: Managed Postgres (RDS) — ${{ values.instanceName }} — for ${{ values.ownerService }}
+  annotations:
+    backstage.io/managed-by-location: url:https://github.com/moatazeldebsy/backstage-idp-starter/blob/main/terraform/infra/managed-postgres/${{ values.instanceName }}/
+  labels:
+    postgres-version: "${{ values.postgresVersion }}"
+    aws-region: ${{ values.awsRegion }}
+  tags:
+    - database
+    - postgresql
+    - aws-rds
+spec:
+  type: database
+  owner: ${{ values.owner }}
+  system: internal-developer-platform
+  dependencyOf:
+    - component:${{ values.ownerService }}

@@ -1,0 +1,116 @@
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: platform-team
+  description: Platform engineering team — owns the IDP infrastructure and golden paths
+spec:
+  type: team
+  profile:
+    displayName: Platform Team
+    email: platform@idp.local
+  children:
+    - data-team
+    - qa-team
+    - ml-team
+  members:
+    - moatazeldebsy
+    - guest
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: data-team
+  description: Data Engineering team — data pipelines and analytics
+  tags:
+    - data
+spec:
+  type: team
+  profile:
+    displayName: Data Team
+    email: data-team@idp.local
+  parent: platform-team
+  children: []
+  members:
+    - data-engineer
+---
+apiVersion: backstage.io/v1alpha1
+kind: Group
+metadata:
+  name: ml-team
+  description: Machine Learning team — ML models, AI research, and MLOps
+  tags:
+    - ml
+    - ai
+spec:
+  type: team
+  profile:
+    displayName: ML Team
+    email: ml-team@idp.local
+  parent: platform-team
+  children: []
+  members:
+    - ml-engineer
+    - ai-researcher
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: guest
+  description: Local development guest user
+spec:
+  profile:
+    displayName: Guest
+  memberOf:
+    - platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: moatazeldebsy
+  description: Platform owner
+  annotations:
+    github.com/user-login: moatazeldebsy
+spec:
+  profile:
+    displayName: Moataz Nabil
+  memberOf:
+    - platform-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: ml-engineer
+  description: ML Engineer on the ML Team
+spec:
+  profile:
+    displayName: Alex Chen
+    email: alex.chen@idp.local
+    picture: https://avatars.githubusercontent.com/u/0?v=4
+  memberOf:
+    - ml-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: ai-researcher
+  description: AI Researcher on the ML Team
+spec:
+  profile:
+    displayName: Sam Rivera
+    email: sam.rivera@idp.local
+  memberOf:
+    - ml-team
+---
+apiVersion: backstage.io/v1alpha1
+kind: User
+metadata:
+  name: data-engineer
+  description: Data Engineer on the Data Team
+spec:
+  profile:
+    displayName: Jordan Kim
+    email: jordan.kim@idp.local
+  memberOf:
+    - data-team
+# System entity is registered via /catalog-info.yaml (repo root, uses dir:.)
+# hello-service is registered via /services/hello-service/catalog-info.yaml (co-located, uses dir:.)

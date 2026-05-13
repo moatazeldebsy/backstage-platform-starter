@@ -1,0 +1,75 @@
+# Local development overrides — safe defaults when credentials are not configured.
+# Merged on top of app-config.yaml at runtime.
+# To enable a feature, set the relevant env vars in local/backstage/.env
+
+app:
+  baseUrl: http://backstage.idp.local
+
+backend:
+  # All traffic (frontend + API) is served through port 3000 → 7007 in container
+  baseUrl: http://backstage.idp.local
+  cors:
+    origin: http://backstage.idp.local
+  database:
+    connection:
+      ssl: false   # local Postgres container has no SSL; override the production default
+  # externalAccess static token allows the catalog-exporter CronJob (in-cluster) to
+  # query the Backstage catalog API without a user session. Set the same value in the
+  # 'backstage-catalog-exporter-token' Kubernetes Secret.
+  auth:
+    externalAccess:
+      - type: static
+        options:
+          token: "local-catalog-exporter-token"
+          subject: catalog-exporter
+  reading:
+    allow:
+      - host: raw.githubusercontent.com  # used when GITHUB_TOKEN is set (production)
+      - host: localhost:7007              # allows reading tech-radar.json from local static assets
+
+# Auth — enable guest provider so the UI works without GitHub OAuth credentials.
+auth:
+  environment: development
+  providers:
+    guest: {}
+    github:
+      development:
+        signIn:
+          resolvers:
+            # Match GitHub login against entity name (works with private/no email)
+            - resolver: usernameMatchingUserEntityName
+              dangerouslyAllowSignInWithoutUserInCatalog: true
+
+integrations:
+  github:
+    - host: github.com
+      token: ${GITHUB_TOKEN:-local-dev-no-github}
+
+# Override the OpenCost proxy target — in-cluster DNS is not reachable from Docker;
+# use the ingress hostname that is mapped to host-gateway in docker-compose extra_hosts.
+proxy:
+  endpoints:
+    /opencost:
+      target: http://opencost.idp.local
+      allowedMethods: ['GET']
+      changeOrigin: true
+    /grafana/api:
+      target: http://grafana.idp.local
+      allowedMethods: ['GET']
+      changeOrigin: true
+      headers:
+        Authorization: Bearer ${GRAFANA_TOKEN}
+
+# Serve tech radar from the locally mounted catalog volume instead of GitHub raw URL.
+# This avoids the YOUR_GITHUB_ORG placeholder issue and works without a GitHub token.
+techRadar:
+  url: http://localhost:7007/tech-radar.json
+
+techdocs:
+  builder: 'local'
+  generator:
+    runIn: 'local'   # use mkdocs installed in the container, not a separate Docker-in-Docker call
+  publisher:
+    type: 'local'    # store generated docs on the container filesystem
+
+
