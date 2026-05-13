@@ -18035,7 +18035,7 @@ __metadata:
     "@backstage/core-components": "npm:^0.18.8"
     "@backstage/core-plugin-api": "npm:^1.12.4"
     "@backstage/frontend-defaults": "npm:^0.5.0"
-    "@backstage/frontend-plugin-api": "npm:^0.15.1"
+    "@backstage/frontend-plugin-api": "npm:^0.16.2"
     "@backstage/frontend-test-utils": "npm:^0.5.1"
     "@backstage/integration-react": "npm:^1.2.16"
     "@backstage/plugin-api-docs": "npm:^0.13.5"
