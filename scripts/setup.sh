@@ -228,12 +228,35 @@ log "✓ Prerequisites check passed."
 echo ""
 
 # ════════════════════════════════════════════════════════════════════════════════
+# Check if already personalised
+# ════════════════════════════════════════════════════════════════════════════════
+
+SKIP_PHASE_0=0
+if [[ -f local/.env ]]; then
+  EXISTING_GITHUB_ORG=$(grep -E "^GITHUB_ORG=" local/.env | cut -d= -f2- || true)
+  EXISTING_PLATFORM_REPO=$(grep -E "^PLATFORM_REPO=" local/.env | cut -d= -f2- || true)
+
+  if [[ -n "$EXISTING_GITHUB_ORG" && "$EXISTING_GITHUB_ORG" != "YOUR_GITHUB_ORG" ]] && \
+     [[ -n "$EXISTING_PLATFORM_REPO" && "$EXISTING_PLATFORM_REPO" != "backstage-platform-starter" ]]; then
+    SKIP_PHASE_0=1
+    log "✓ Already personalised (GITHUB_ORG=$EXISTING_GITHUB_ORG, PLATFORM_REPO=$EXISTING_PLATFORM_REPO)"
+    echo ""
+    GITHUB_ORG="$EXISTING_GITHUB_ORG"
+    PLATFORM_REPO="$EXISTING_PLATFORM_REPO"
+    DISPLAY_NAME=$(grep -E "^DISPLAY_NAME=" local/.env | cut -d= -f2- || echo "User")
+    AWS_REGION=$(grep -E "^AWS_REGION=" local/.env | cut -d= -f2- || echo "us-east-1")
+    CLUSTER_NAME=$(grep -E "^CLUSTER_NAME=" local/.env | cut -d= -f2- || echo "idp-mvp")
+  fi
+fi
+
+# ════════════════════════════════════════════════════════════════════════════════
 # PHASE 0 — Personalisation
 # ════════════════════════════════════════════════════════════════════════════════
 
-step "Phase 0 — Personalisation"
+if [[ $SKIP_PHASE_0 -eq 0 ]]; then
+  step "Phase 0 — Personalisation"
 
-# ── Gather inputs ────────────────────────────────────────────────────────────
+  # ── Gather inputs ────────────────────────────────────────────────────────────
 
 read -rp "$(echo -e "${CYAN}GitHub org or username${RESET} (e.g. acme-corp): ")" GITHUB_ORG
 [[ -z "${GITHUB_ORG}" ]] && { echo "GitHub org is required."; exit 1; }
@@ -374,6 +397,11 @@ fi
 # Also write GITHUB_ORG to backstage/app/.env for local development
 if [[ -f backstage/app/.env ]]; then
   _upsert_env "backstage/app/.env" "GITHUB_ORG" "${GITHUB_ORG}"
+fi
+
+else
+  log "Skipping Phase 0 — already personalised. Using existing configuration."
+  echo ""
 fi
 
 # ── Secrets & tokens wizard ──────────────────────────────────────────────────
