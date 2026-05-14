@@ -337,7 +337,8 @@ EXISTING_COUNT=0
 
 if [[ -f local/.env ]]; then
   EXISTING_GITHUB_TOKEN=$(grep -E "^GITHUB_TOKEN=" local/.env | cut -d= -f2- | tr -d '"' || true)
-  if [[ -n "$EXISTING_GITHUB_TOKEN" && "$EXISTING_GITHUB_TOKEN" != "" ]]; then
+  # Detect non-empty values (skip empty lines and comments)
+  if [[ -n "$EXISTING_GITHUB_TOKEN" ]]; then
     HAS_EXISTING_SECRETS=1
     EXISTING_COUNT=$((EXISTING_COUNT + 1))
   fi
@@ -345,7 +346,7 @@ fi
 
 if [[ -f local/backstage/.env ]]; then
   EXISTING_OAUTH_ID=$(grep -E "^AUTH_GITHUB_CLIENT_ID=" local/backstage/.env | cut -d= -f2- || true)
-  if [[ -n "$EXISTING_OAUTH_ID" && "$EXISTING_OAUTH_ID" != "" ]]; then
+  if [[ -n "$EXISTING_OAUTH_ID" ]]; then
     HAS_EXISTING_SECRETS=1
     EXISTING_COUNT=$((EXISTING_COUNT + 1))
   fi
