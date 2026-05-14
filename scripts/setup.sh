@@ -180,6 +180,54 @@ echo "bootstraps the full platform end-to-end."
 echo ""
 
 # ════════════════════════════════════════════════════════════════════════════════
+# PHASE -1 — Prerequisites Check
+# ════════════════════════════════════════════════════════════════════════════════
+
+step "Phase -1 — Checking prerequisites"
+
+MISSING_TOOLS=()
+OPTIONAL_TOOLS=()
+
+# Essential tools (must have)
+for cmd in git docker kubectl helm; do
+  if ! command -v "$cmd" &>/dev/null; then
+    MISSING_TOOLS+=("$cmd")
+  fi
+done
+
+# Optional tools (nice to have)
+for cmd in kind terraform go node npm; do
+  if ! command -v "$cmd" &>/dev/null; then
+    OPTIONAL_TOOLS+=("$cmd")
+  fi
+done
+
+# Report missing essential tools
+if [[ ${#MISSING_TOOLS[@]} -gt 0 ]]; then
+  echo -e "${RED}✗ Missing required tools:${RESET}"
+  for tool in "${MISSING_TOOLS[@]}"; do
+    echo "  - $tool"
+  done
+  echo ""
+  err "Please install the missing tools and re-run this script."
+fi
+
+# Report optional tools
+if [[ ${#OPTIONAL_TOOLS[@]} -gt 0 ]]; then
+  echo -e "${YELLOW}⚠ Optional tools not found (some features may be limited):${RESET}"
+  for tool in "${OPTIONAL_TOOLS[@]}"; do
+    echo "  - $tool"
+  done
+  echo ""
+  read -rp "$(echo -e "${CYAN}Continue anyway?${RESET} [y/N] ")" CONTINUE_OPT
+  [[ "${CONTINUE_OPT}" =~ ^[Yy]$ ]] || { echo "Aborted. Install optional tools and re-run."; exit 0; }
+  echo ""
+fi
+
+log "✓ Prerequisites check passed."
+echo ""
+
+# ════════════════════════════════════════════════════════════════════════════════
 # PHASE 0 — Personalisation
 # ════════════════════════════════════════════════════════════════════════════════
 
