@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# scripts/setup.sh — One-time setup for backstage-idp-starter.
+# scripts/setup.sh — One-time setup for backstage-platform-starter.
 #
 # Phases:
 #   0. Personalise placeholders (GitHub org, AWS account, region, cluster name)
@@ -28,7 +28,7 @@ _print_skip_summary() {
   echo "       # edit terraform.tfvars, then:"
   echo "       ./scripts/bootstrap.sh"
   echo "  4. Commit your personalised repo:"
-  echo "       git add . && git commit -m 'chore: initialise from backstage-idp-starter'"
+  echo "       git add . && git commit -m 'chore: initialise from backstage-platform-starter'"
   echo ""
   echo "Full docs: docs/  |  Day-2 tools: idp scaffold service / test-suite  |  scripts/setup-runner.sh"
   echo ""
@@ -41,7 +41,7 @@ _print_skip_summary() {
 _bootstrap_local() {
   step "Phase 2A — Local bootstrap"
 
-  # ── Ensure .env files exist and prompt the user to fill them in ─────────────
+  # ── Ensure .env files exist ──────────────────────────────────────────────────
   local env_shared="${ROOT_DIR}/local/.env"
   local env_backstage="${ROOT_DIR}/local/backstage/.env"
 
@@ -54,49 +54,10 @@ _bootstrap_local() {
     log "Created local/backstage/.env from template."
   fi
 
-  echo ""
-  echo -e "${BOLD}Before bootstrapping, you need three credentials:${RESET}"
-  echo ""
-  echo -e "${CYAN}1. GitHub Personal Access Token (PAT)${RESET} → set GITHUB_TOKEN in local/.env"
-  echo "   Create at: https://github.com/settings/tokens"
-  echo "   Token type: Classic | Required scopes: repo, read:org, workflow, delete_repo"
-  echo ""
-  echo -e "${CYAN}2. GitHub OAuth App Client ID & Secret${RESET} → set AUTH_GITHUB_CLIENT_ID and"
-  echo "   AUTH_GITHUB_CLIENT_SECRET in local/backstage/.env"
-  echo "   Create at: https://github.com/settings/developers → OAuth Apps → New OAuth App"
-  echo "     Homepage URL : ${BACKSTAGE_URL:-http://localhost:3000}"
-  echo "     Callback URL : ${BACKSTAGE_CALLBACK_URL:-http://localhost:3000/api/auth/github/handler/frame}"
-  echo ""
-  echo -e "${CYAN}   Note:${RESET} Your Backstage User entity is pre-configured as:"
-  echo "     name / GitHub login : ${GITHUB_ORG}"
-  echo "     displayName         : ${DISPLAY_NAME}"
-  echo "   Sign in with GitHub using the '${GITHUB_ORG}' account to match this entity."
-  echo ""
-  echo -e "${CYAN}3. Backstage auth secret${RESET} → set BACKSTAGE_AUTH_SECRET in local/backstage/.env"
-  echo "   Any string works locally; for production use: openssl rand -hex 32"
-  echo "   (Leave blank to use the built-in dev default.)"
-  echo ""
-  echo "  Edit: local/.env  and  local/backstage/.env"
-  echo ""
-  read -rp "$(echo -e "${CYAN}Have you filled in the required tokens?${RESET} [Y/n] ")" TOKENS_READY
-  TOKENS_READY="${TOKENS_READY:-Y}"
-  if [[ ! "${TOKENS_READY}" =~ ^[Yy]$ ]]; then
-    echo ""
-    echo "Pausing here. Fill in your tokens, then re-run ./scripts/setup.sh or proceed directly:"
-    echo "  ./scripts/bootstrap-local.sh"
-    exit 0
-  fi
-
   # ── Warn on empty GITHUB_TOKEN ──────────────────────────────────────────────
   local github_token=""
   [[ -f "$env_shared" ]] && github_token=$(grep -E '^GITHUB_TOKEN=' "$env_shared" | cut -d= -f2- | tr -d '"' || true)
-  if [[ -z "$github_token" ]]; then
-    warn "GITHUB_TOKEN is still empty in local/.env."
-    warn "The DORA exporter and scaffolder templates require it."
-    echo ""
-    read -rp "$(echo -e "${CYAN}Continue without GITHUB_TOKEN?${RESET} [y/N] ")" SKIP_TOKEN
-    [[ "${SKIP_TOKEN}" =~ ^[Yy]$ ]] || { echo "Aborted. Set GITHUB_TOKEN in local/.env and re-run."; exit 0; }
-  fi
+  [[ -z "$github_token" ]] && warn "GITHUB_TOKEN is empty — DORA exporter and scaffolder templates will not work."
 
   # ── Step 1: Bootstrap the Kind cluster and platform ─────────────────────────
   # bootstrap-local.sh is idempotent and handles everything: cluster creation,
@@ -129,6 +90,15 @@ _bootstrap_local() {
 
 _bootstrap_aws() {
   step "Phase 2B — AWS bootstrap"
+
+  # ── Load secrets from .env ───────────────────────────────────────────────────
+  local env_shared="${ROOT_DIR}/local/.env"
+  if [[ -f "$env_shared" ]]; then
+    log "Loading environment variables from local/.env..."
+    set -a
+    source "$env_shared"
+    set +a
+  fi
 
   # ── Pre-flight ──────────────────────────────────────────────────────────────
   log "Checking required tools..."
@@ -192,7 +162,7 @@ Install them and re-run this script, or run manually:
   echo "  Register a CI runner: ./scripts/setup-runner.sh --repo <repo-name>"
   echo ""
   echo "  Commit your personalised repo:"
-  echo "    git add . && git commit -m 'chore: initialise from backstage-idp-starter'"
+  echo "    git add . && git commit -m 'chore: initialise from backstage-platform-starter'"
   echo ""
 }
 
@@ -202,7 +172,7 @@ Install them and re-run this script, or run manually:
 
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════════════╗${RESET}"
-echo -e "${BOLD}║     backstage-idp-starter  ·  Setup         ║${RESET}"
+echo -e "${BOLD}║   backstage-platform-starter  ·  Setup       ║${RESET}"
 echo -e "${BOLD}╚══════════════════════════════════════════════╝${RESET}"
 echo ""
 echo "This script personalises your copy of the template and optionally"
@@ -230,8 +200,8 @@ AWS_REGION="${AWS_REGION:-us-east-1}"
 read -rp "$(echo -e "${CYAN}EKS / Kind cluster name${RESET} [idp-mvp]: ")" CLUSTER_NAME
 CLUSTER_NAME="${CLUSTER_NAME:-idp-mvp}"
 
-read -rp "$(echo -e "${CYAN}Platform repo name${RESET} (the name of THIS repo) [backstage-idp-starter]: ")" PLATFORM_REPO
-PLATFORM_REPO="${PLATFORM_REPO:-backstage-idp-starter}"
+read -rp "$(echo -e "${CYAN}Platform repo name${RESET} (the name of THIS repo) [backstage-platform-starter]: ")" PLATFORM_REPO
+PLATFORM_REPO="${PLATFORM_REPO:-backstage-platform-starter}"
 
 read -rp "$(echo -e "${CYAN}Backstage base URL${RESET} [http://localhost:3000]: ")" BACKSTAGE_URL
 BACKSTAGE_URL="${BACKSTAGE_URL:-http://localhost:3000}"
@@ -302,9 +272,9 @@ if [[ "${CLUSTER_NAME}" != "idp-mvp" ]]; then
     {} 2>/dev/null || true
 fi
 
-if [[ "${PLATFORM_REPO}" != "backstage-idp-starter" ]]; then
+if [[ "${PLATFORM_REPO}" != "backstage-platform-starter" ]]; then
   echo "$TARGETS" | xargs -I{} _sed \
-    "s/backstage-idp-starter/${PLATFORM_REPO}/g" \
+    "s/backstage-platform-starter/${PLATFORM_REPO}/g" \
     {} 2>/dev/null || true
 fi
 
@@ -341,12 +311,155 @@ if [[ -f local/backstage/.env.example && ! -f local/backstage/.env ]]; then
   log "Created local/backstage/.env — fill in your tokens before starting Backstage."
 fi
 
+if [[ -f backstage/app/.env.example && ! -f backstage/app/.env ]]; then
+  cp backstage/app/.env.example backstage/app/.env
+  log "Created backstage/app/.env — for local yarn development."
+fi
+
 # Persist org + repo to local/.env so the idp CLI and day-2 scripts can read them
 if [[ -f local/.env ]]; then
   _upsert_env "local/.env" "GITHUB_ORG" "${GITHUB_ORG}"
   _upsert_env "local/.env" "PLATFORM_REPO" "${PLATFORM_REPO}"
   log "Wrote GITHUB_ORG and PLATFORM_REPO to local/.env"
 fi
+
+# Also write GITHUB_ORG to backstage/app/.env for local development
+if [[ -f backstage/app/.env ]]; then
+  _upsert_env "backstage/app/.env" "GITHUB_ORG" "${GITHUB_ORG}"
+fi
+
+# ── Secrets & tokens wizard ──────────────────────────────────────────────────
+step "Phase 0b — Secrets & tokens"
+
+# Check if .env files already have secrets populated
+HAS_EXISTING_SECRETS=0
+EXISTING_COUNT=0
+
+if [[ -f local/.env ]]; then
+  EXISTING_GITHUB_TOKEN=$(grep -E "^GITHUB_TOKEN=" local/.env | cut -d= -f2- | tr -d '"' || true)
+  if [[ -n "$EXISTING_GITHUB_TOKEN" && "$EXISTING_GITHUB_TOKEN" != "" ]]; then
+    HAS_EXISTING_SECRETS=1
+    EXISTING_COUNT=$((EXISTING_COUNT + 1))
+  fi
+fi
+
+if [[ -f local/backstage/.env ]]; then
+  EXISTING_OAUTH_ID=$(grep -E "^AUTH_GITHUB_CLIENT_ID=" local/backstage/.env | cut -d= -f2- || true)
+  if [[ -n "$EXISTING_OAUTH_ID" && "$EXISTING_OAUTH_ID" != "" ]]; then
+    HAS_EXISTING_SECRETS=1
+    EXISTING_COUNT=$((EXISTING_COUNT + 1))
+  fi
+fi
+
+if [[ $HAS_EXISTING_SECRETS -eq 1 ]]; then
+  echo -e "${YELLOW}⚠ Existing secrets detected!${RESET}"
+  echo "  Found $EXISTING_COUNT secret(s) already populated in .env files"
+  echo ""
+  read -rp "$(echo -e "${CYAN}Update existing secrets?${RESET} [y/N] ")" UPDATE_SECRETS
+  UPDATE_SECRETS="${UPDATE_SECRETS:-N}"
+  if [[ ! "${UPDATE_SECRETS}" =~ ^[Yy]$ ]]; then
+    log "Keeping existing secrets. Skipping Phase 0b."
+    echo ""
+    echo "✓ Existing .env files are already populated."
+    echo ""
+  else
+    log "Updating secrets..."
+  fi
+else
+  UPDATE_SECRETS="Y"
+fi
+
+if [[ "${UPDATE_SECRETS}" =~ ^[Yy]$ ]]; then
+  echo "Enter your secret values now (leave blank to skip and fill manually later)."
+  echo ""
+else
+  # Skip the wizard entirely if keeping existing secrets
+  step "Phase 1 — Mode selection"
+  echo ""
+  echo "What would you like to do next?"
+  echo "  local  — Bootstrap the full platform locally (Kind cluster, no AWS needed)"
+  echo "  aws    — Provision and bootstrap on AWS EKS (requires Terraform + AWS creds)"
+  echo "  skip   — Stop here; run scripts manually when ready"
+  echo ""
+  read -rp "$(echo -e "${CYAN}Environment${RESET} [local/aws/skip]: ")" SETUP_MODE
+  SETUP_MODE="${SETUP_MODE:-skip}"
+
+  case "${SETUP_MODE}" in
+    local) _bootstrap_local ;;
+    aws)   _bootstrap_aws   ;;
+    skip)
+      _print_skip_summary
+      exit 0
+      ;;
+    *)
+      warn "Unrecognised option '${SETUP_MODE}' — defaulting to skip."
+      _print_skip_summary
+      exit 0
+      ;;
+  esac
+  exit 0
+fi
+
+# GITHUB_TOKEN
+echo -e "${CYAN}GitHub Personal Access Token (PAT)${RESET}"
+echo "  Create at: https://github.com/settings/tokens"
+echo "  Type: Classic | Scopes: repo, read:org, workflow, delete_repo"
+read -rsp "  GITHUB_TOKEN: " _GITHUB_TOKEN; echo
+if [[ -n "$_GITHUB_TOKEN" ]]; then
+  _upsert_env "local/.env" "GITHUB_TOKEN" "$_GITHUB_TOKEN"
+  _upsert_env "local/backstage/.env" "GITHUB_TOKEN" "$_GITHUB_TOKEN"
+  _upsert_env "backstage/app/.env" "GITHUB_TOKEN" "$_GITHUB_TOKEN"
+fi
+
+# GitHub OAuth
+echo ""
+echo -e "${CYAN}GitHub OAuth App${RESET} (enables 'Sign in with GitHub' in Backstage)"
+echo "  Create at: https://github.com/settings/developers → OAuth Apps → New"
+echo "    Homepage URL : ${BACKSTAGE_URL}"
+echo "    Callback URL : ${BACKSTAGE_CALLBACK_URL}"
+read -rp  "  AUTH_GITHUB_CLIENT_ID: " _CLIENT_ID
+read -rsp "  AUTH_GITHUB_CLIENT_SECRET: " _CLIENT_SECRET; echo
+if [[ -n "$_CLIENT_ID" ]]; then
+  _upsert_env "local/backstage/.env" "AUTH_GITHUB_CLIENT_ID" "$_CLIENT_ID"
+  _upsert_env "backstage/app/.env" "AUTH_GITHUB_CLIENT_ID" "$_CLIENT_ID"
+fi
+if [[ -n "$_CLIENT_SECRET" ]]; then
+  _upsert_env "local/backstage/.env" "AUTH_GITHUB_CLIENT_SECRET" "$_CLIENT_SECRET"
+  _upsert_env "backstage/app/.env" "AUTH_GITHUB_CLIENT_SECRET" "$_CLIENT_SECRET"
+fi
+
+# BACKSTAGE_AUTH_SECRET
+echo ""
+echo -e "${CYAN}Backstage auth secret${RESET} (leave blank to auto-generate)"
+read -rsp "  BACKSTAGE_AUTH_SECRET: " _BS_SECRET; echo
+if [[ -z "$_BS_SECRET" ]] && command -v openssl &>/dev/null; then
+  _BS_SECRET=$(openssl rand -hex 32)
+  log "Auto-generated BACKSTAGE_AUTH_SECRET."
+fi
+if [[ -n "$_BS_SECRET" ]]; then
+  _upsert_env "local/backstage/.env" "BACKSTAGE_AUTH_SECRET" "$_BS_SECRET"
+  _upsert_env "backstage/app/.env" "BACKSTAGE_AUTH_SECRET" "$_BS_SECRET"
+fi
+
+# ANTHROPIC_API_KEY
+echo ""
+echo -e "${CYAN}Anthropic API key${RESET} (optional — powers the KAgent AI assistant)"
+echo "  Create at: https://console.anthropic.com/settings/keys"
+read -rsp "  ANTHROPIC_API_KEY (leave blank to skip): " _ANTHROPIC_KEY; echo
+if [[ -n "$_ANTHROPIC_KEY" ]]; then
+  _upsert_env "local/.env" "ANTHROPIC_API_KEY" "$_ANTHROPIC_KEY"
+fi
+
+# SLACK_WEBHOOK_URL
+echo ""
+echo -e "${CYAN}Slack webhook URL${RESET} (optional — alert routing)"
+read -rp "  SLACK_WEBHOOK_URL (leave blank to skip): " _SLACK_URL
+if [[ -n "$_SLACK_URL" ]]; then
+  _upsert_env "local/.env" "SLACK_WEBHOOK_URL" "$_SLACK_URL"
+fi
+
+echo ""
+log "Secrets written to local/.env, local/backstage/.env, and backstage/app/.env"
 
 # Build the idp CLI so it is ready immediately after setup
 if command -v go &>/dev/null; then
