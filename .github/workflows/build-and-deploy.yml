@@ -157,7 +157,7 @@ jobs:
       - name: Build and push
         if: steps.guard.outputs.has_aws == 'true'
         id: build-push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: services/${{ matrix.service }}
           push: true
